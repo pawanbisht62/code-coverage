@@ -64,4 +64,3 @@ jobs:
               echo "Low code coverage, current coverage: ${coverage} %, expected: >= 80 %"
               exit 1
           fi
-
