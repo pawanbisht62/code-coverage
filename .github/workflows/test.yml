@@ -1,0 +1,68 @@
+name: Run Tests
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    env:
+      NIGHTLY: nightly-2023-02-01 # Fix version to prevent cache misses with nightly changes
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set-Up
+        run: sudo apt update && sudo apt install -y git clang curl libssl-dev llvm libudev-dev cmake protobuf-compiler
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Install Nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.NIGHTLY }}
+          override: true
+          target: wasm32-unknown-unknown
+
+      - name: Install grcov
+        run: |
+          cargo install grcov
+          rustup component add llvm-tools-preview
+
+      # Rust cache
+      - uses: Swatinem/rust-cache@v2
+
+      - name: test
+        run: |
+          SKIP_WASM_BUILD=1 RUSTFLAGS="-C instrument-coverage" cargo test --tests
+
+      - name: test coverage
+        run: |
+           grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --keep-only "pallets/template/src/lib.rs" -o target/coverage/html
+
+      - name: check coverage
+        run: |
+          json_data=`cat target/coverage/html/coverage.json`
+          coverage=`echo $(jq -r '.message' <<< "json_data")`
+          coverage="${coverage%%.*}"
+          if [ coverage -lt 80  ];
+          then
+              echo "Low coverage"
+              exit 1
+          fi
+          echo ${number}
+
