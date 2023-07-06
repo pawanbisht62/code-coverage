@@ -62,3 +62,4 @@ In the above command we have used `--keep-only` option to generate report for sp
         exit 1
     fi
 ```
+And a complete yml file can be found [here](.github/workflows/test.yml).
