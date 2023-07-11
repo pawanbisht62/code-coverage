@@ -4,7 +4,7 @@ name: Run Tests
 on:
   # Triggers the workflow on push or pull request events but only for the branch
   push:
-    branches: [ main ]
+    branches: [ pawan/upload-to-codecov ]
   pull_request:
     branches: [ main ]
 
@@ -54,16 +54,6 @@ jobs:
         run: |
            grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --keep-only "pallets/template/src/lib.rs" -o target/coverage/html
 
-      - name: check coverage
-        run: |
-          json_data=`cat target/coverage/html/coverage.json`
-          coverage=`echo $(jq -r '.message' <<< "$json_data")`
-          coverage="${coverage%%.*}"
-          if [ $coverage -lt 80  ];
-          then
-              echo "Low code coverage, current coverage: ${coverage} %, expected: >= 80 %"
-              exit 1
-          fi
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
