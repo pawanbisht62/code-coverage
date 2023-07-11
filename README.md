@@ -1,5 +1,4 @@
-[![codecov](https://codecov.io/gh/pawanbisht62/code-coverage/branch/main/graph/badge.svg?token=X9LFJ0IVER)](https://codecov.io/gh/pawanbisht62/code-coverage)
-
+[![codecov](https://codecov.io/gh/pawanbisht62/code-coverage/branch/pawan/upload-to-codecov/graph/badge.svg?token=X9LFJ0IVER)](https://codecov.io/gh/pawanbisht62/code-coverage)
 # Generate code coverage report and validate in CI check 
 
 The Rust compiler includes two code coverage implementations:
