@@ -19,7 +19,7 @@ jobs:
       NIGHTLY: nightly-2023-02-01 # Fix version to prevent cache misses with nightly changes
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set-Up
         run: sudo apt update && sudo apt install -y git clang curl libssl-dev llvm libudev-dev cmake protobuf-compiler
